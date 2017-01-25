@@ -44,11 +44,11 @@ namespace WinMef730
 
     class BasicAuthenticationInspector : System.ServiceModel.Dispatcher.IClientMessageInspector
     {
-        private string authorizzation;
+        private string authorization;
 
         public BasicAuthenticationInspector(string username, string password)
         {
-            this.authorizzation = "Basic " + Convert.ToBase64String(Encoding.UTF8.GetBytes(String.Format("{0}:{1}", username, password)));
+            this.authorization = "Basic " + Convert.ToBase64String(Encoding.UTF8.GetBytes(String.Format("{0}:{1}", username, password)));
         }
 
         public void AfterReceiveReply(ref Message reply, object correlationState)
@@ -62,11 +62,10 @@ namespace WinMef730
 
             if (richiesta != null)
             {
-                richiesta.Headers.Add("Authorization", this.authorizzation);
-            } else
-            {
+                richiesta.Headers.Add("Authorization", this.authorization);
+            } else {
                 richiesta = new HttpRequestMessageProperty();
-                richiesta.Headers.Add("Authorization", this.authorizzation);
+                richiesta.Headers.Add("Authorization", this.authorization);
                 request.Properties.Add(HttpRequestMessageProperty.Name, richiesta);
             }
 

@@ -59,5 +59,15 @@ namespace WinMef730 {
                 resourceCulture = value;
             }
         }
+        
+        /// <summary>
+        ///   Cerca una risorsa localizzata di tipo System.Byte[].
+        /// </summary>
+        internal static byte[] SanitelCF {
+            get {
+                object obj = ResourceManager.GetObject("SanitelCF", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
     }
 }

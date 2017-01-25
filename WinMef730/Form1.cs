@@ -3,8 +3,11 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Net.Security;
+using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,10 +17,6 @@ namespace WinMef730
 {
     public partial class Form1 : Form
     {
-        private string pin_cifrato = "txIO+4Z3DqZvxrol9o6KmkQjlWSD4SOLdeUigRadhoxVNv7rM3RytJlT1jCHdMEg337cD3D1bvYd/uFLeBT+uZzzZy67Rx5UlWD6bvqXlRQjAMxDH/oGcsxmLtBqLPe8i/ZHdiE1xgEPWj+OX6bOdZJOaQgCa9LY8WQaWOWSvbA=";
-        private string cfProprietario = "CCSRMO77A09H501E";
-        //private string pIva = "03213213210";
-
         private string endpoint_coinfiguration_name = "InvioTelematicoSS730pMtomPort";
         private string test_remote_address = "https://invioSS730pTest.sanita.finanze.it/InvioTelematicoSS730pMtomWeb/InvioTelematicoSS730pMtomPort";
         private string remote_address = "https://invioSS730p.sanita.finanze.it/InvioTelematicoSS730pMtomWeb/InvioTelematicoSS730pMtomPort";
@@ -51,24 +50,24 @@ namespace WinMef730
 
         private void sendRequest()
         {
+            FileInfo finfo = new FileInfo(txtFileName.Text);
             InvioFlussi730.inviaFileMtomRequest req = new InvioFlussi730.inviaFileMtomRequest();
             InvioFlussi730.inviaFileMtomResponse reesp = new InvioFlussi730.inviaFileMtomResponse();
 
             InvioFlussi730.proprietario proprietario = new InvioFlussi730.proprietario();
 
-            proprietario.cfProprietario = this.cfProprietario;
+            proprietario.cfProprietario = txtCfProprietario.Text;
             proprietario.codiceAsl = txtASL.Text;
             proprietario.codiceRegione = txtRegione.Text;
             proprietario.codiceSSA = txtSSA.Text;
 
             req.datiProprietario = proprietario;
-            req.nomeFileAllegato = "strutturaAccreditata.zip";
+            req.nomeFileAllegato = finfo.Name;
             req.opzionale1 = "";
             req.opzionale2 = "";
             req.opzionale3 = "";
-
-            req.documento = System.IO.File.ReadAllBytes(txtFileName.Text);
-            req.pincodeInvianteCifrato = this.pin_cifrato;
+            req.documento = File.ReadAllBytes(txtFileName.Text);
+            req.pincodeInvianteCifrato = this.encode(txtPin.Text);
 
             System.Net.ServicePointManager.ServerCertificateValidationCallback = delegate(
                 Object obj, X509Certificate certificate, X509Chain chain, SslPolicyErrors errors)
@@ -78,16 +77,38 @@ namespace WinMef730
 
             this.client.Endpoint.EndpointBehaviors.Add(new BasicAuthenticationBehavior(txtUsername.Text, txtPassword.Text));
 
-            InvioFlussi730.ricevutaInvio ricevuta = this.client.inviaFileMtom(
-                req.nomeFileAllegato, 
-                req.pincodeInvianteCifrato, 
-                req.datiProprietario, 
-                req.opzionale1, 
-                req.opzionale2, 
-                req.opzionale3, 
-                req.documento);
+            InvioFlussi730.ricevutaInvio ricevuta = null;
+            try
+            {
+                ricevuta = this.client.inviaFileMtom(
+                    req.nomeFileAllegato, 
+                    req.pincodeInvianteCifrato, 
+                    req.datiProprietario, 
+                    req.opzionale1, 
+                    req.opzionale2, 
+                    req.opzionale3, 
+                    req.documento);
+            } catch (System.ServiceModel.CommunicationException e)
+            {
+                this.txtResponse.Text = e.Message;
+                return;
+            }
+            
 
-            txtResponse.Text = "Esito: " + ricevuta.codiceEsito + "\nDescrizione esito: " + ricevuta.descrizioneEsito;
+            txtResponse.Text = "Esito: " + ricevuta.codiceEsito +
+                "\r\nDescrizione esito: " + ricevuta.descrizioneEsito +
+                "\r\nProtocollo assegnato: " + ricevuta.protocollo;
+        }
+
+        private string encode(string stringa_da_codificare)
+        {
+            X509Certificate2 cert = new X509Certificate2(WinMef730.Resource1.SanitelCF);
+            RSACryptoServiceProvider rsaCSP = (RSACryptoServiceProvider) cert.PublicKey.Key;
+
+            Byte[] byt = System.Text.Encoding.ASCII.GetBytes(stringa_da_codificare);
+            Byte[] bytout = rsaCSP.Encrypt(byt, false);
+
+            return Convert.ToBase64String(bytout);
         }
     }
 }

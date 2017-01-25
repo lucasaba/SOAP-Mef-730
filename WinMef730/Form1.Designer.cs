@@ -46,6 +46,8 @@
             this.btnTestSend = new System.Windows.Forms.Button();
             this.btnInvio = new System.Windows.Forms.Button();
             this.txtResponse = new System.Windows.Forms.TextBox();
+            this.txtCfProprietario = new System.Windows.Forms.TextBox();
+            this.label7 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // openFileDialog1
@@ -82,7 +84,6 @@
             // 
             this.txtPassword.Location = new System.Drawing.Point(16, 68);
             this.txtPassword.Name = "txtPassword";
-            this.txtPassword.PasswordChar = '*';
             this.txtPassword.Size = new System.Drawing.Size(100, 20);
             this.txtPassword.TabIndex = 3;
             this.txtPassword.Text = "P2SPDVF4";
@@ -91,7 +92,6 @@
             // 
             this.txtPin.Location = new System.Drawing.Point(16, 94);
             this.txtPin.Name = "txtPin";
-            this.txtPin.PasswordChar = '*';
             this.txtPin.Size = new System.Drawing.Size(100, 20);
             this.txtPin.TabIndex = 4;
             this.txtPin.Text = "1426073406";
@@ -176,7 +176,7 @@
             // 
             // btnTestSend
             // 
-            this.btnTestSend.Location = new System.Drawing.Point(16, 134);
+            this.btnTestSend.Location = new System.Drawing.Point(16, 146);
             this.btnTestSend.Name = "btnTestSend";
             this.btnTestSend.Size = new System.Drawing.Size(75, 23);
             this.btnTestSend.TabIndex = 14;
@@ -186,7 +186,7 @@
             // 
             // btnInvio
             // 
-            this.btnInvio.Location = new System.Drawing.Point(101, 134);
+            this.btnInvio.Location = new System.Drawing.Point(97, 146);
             this.btnInvio.Name = "btnInvio";
             this.btnInvio.Size = new System.Drawing.Size(75, 23);
             this.btnInvio.TabIndex = 15;
@@ -196,17 +196,36 @@
             // 
             // txtResponse
             // 
-            this.txtResponse.Location = new System.Drawing.Point(16, 164);
+            this.txtResponse.Location = new System.Drawing.Point(16, 175);
             this.txtResponse.Multiline = true;
             this.txtResponse.Name = "txtResponse";
-            this.txtResponse.Size = new System.Drawing.Size(420, 136);
+            this.txtResponse.Size = new System.Drawing.Size(420, 125);
             this.txtResponse.TabIndex = 16;
+            // 
+            // txtCfProprietario
+            // 
+            this.txtCfProprietario.Location = new System.Drawing.Point(16, 120);
+            this.txtCfProprietario.Name = "txtCfProprietario";
+            this.txtCfProprietario.Size = new System.Drawing.Size(132, 20);
+            this.txtCfProprietario.TabIndex = 17;
+            this.txtCfProprietario.Text = "CCSRMO77A09H501E";
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(154, 127);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(76, 13);
+            this.label7.TabIndex = 18;
+            this.label7.Text = "CF Proprietario";
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(458, 312);
+            this.Controls.Add(this.label7);
+            this.Controls.Add(this.txtCfProprietario);
             this.Controls.Add(this.txtResponse);
             this.Controls.Add(this.btnInvio);
             this.Controls.Add(this.btnTestSend);
@@ -251,6 +270,8 @@
         private System.Windows.Forms.Button btnTestSend;
         private System.Windows.Forms.Button btnInvio;
         private System.Windows.Forms.TextBox txtResponse;
+        private System.Windows.Forms.TextBox txtCfProprietario;
+        private System.Windows.Forms.Label label7;
     }
 }
 
