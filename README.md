@@ -4,6 +4,17 @@ SOAP-Mef-730
 Questo progetto è un piccolo programma per l'invio asincrono del file XML
 con il flusso 730 per gli studi medici convenzionati.
 
+Prima di tutto...
+=================
+
+Prima di lanciare l'eseguibile è necessario o di importare il progetto in visual studio
+è necessario creare il file App.config nella cartellla WinMef730.
+
+Par fare questo, basta rinominare il file App.config.dist in App.config.
+
+Ringraziamenti
+==============
+
 La logica del codice non è mia. La devo con tutto il cuore a una serie di post su 
 [VisualBasic.it](http://www.visual-basic.it/Forum/tabid/151/aft/42746/Default.aspx#.WIjd9HXhDCI)
 e, soprattutto, all'ottimo articolo, accompagnato dal codice, di Giulio Martino che

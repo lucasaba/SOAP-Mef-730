@@ -17,4 +17,13 @@
                 contract="InvioFlussi730.InvioTelematicoSS730pMtom" name="InvioTelematicoSS730pMtomPort" />
         </client>
     </system.serviceModel>
+  <appSettings>
+    <add key="username" value="UXN6VMDD"/>
+    <add key="password" value="P2SPDVF4"/>
+    <add key="pin" value="1426073406"/>
+    <add key="codice_regione" value="020"/>
+    <add key="codice_asl" value="101"/>
+    <add key="codice_ssa" value="888888"/>
+    <add key="cf_proprietario" value="CCSRMO77A09H501E"/>
+  </appSettings>
 </configuration>

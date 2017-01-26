@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Configuration;
 using System.Data;
 using System.Drawing;
 using System.IO;
@@ -26,6 +27,13 @@ namespace WinMef730
         public Form1()
         {
             InitializeComponent();
+            txtUsername.Text = ConfigurationManager.AppSettings["username"];
+            txtPassword.Text = ConfigurationManager.AppSettings["password"];
+            txtPin.Text = ConfigurationManager.AppSettings["pin"];
+            txtCfProprietario.Text = ConfigurationManager.AppSettings["cf_proprietario"];
+            txtRegione.Text = ConfigurationManager.AppSettings["codice_regione"];
+            txtASL.Text = ConfigurationManager.AppSettings["codice_asl"];
+            txtSSA.Text = ConfigurationManager.AppSettings["codice_ssa"];
         }
 
         private void button1_Click(object sender, EventArgs e)
