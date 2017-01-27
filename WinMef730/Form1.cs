@@ -133,6 +133,12 @@ namespace WinMef730
             this.clientRicevuta = new ServiceReference1.RicevutaPdf730Client(this.endpoint_ricevuta_pdf_name, this.test_ricevute_pdf);
             this.sendRicevutaRequest();
         }
+        
+        private void btnRichiediRicevuta_Click(object sender, EventArgs e)
+        {
+            this.clientRicevuta = new ServiceReference1.RicevutaPdf730Client(this.endpoint_ricevuta_pdf_name, this.ricevute_pdf);
+            this.sendRicevutaRequest();
+        }
 
         private void sendRicevutaRequest()
         {
@@ -157,7 +163,7 @@ namespace WinMef730
 
             ServiceReference1.datiOutput datiOut = this.clientRicevuta.RicevutaPdf(datiIn);
 
-            if(datiOut.esitiPositivi != null)
+            if(datiOut.esitiPositivi != null && datiOut.esitoChiamata == "1")
             {
                 string path = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
                 string file = "Ricevuta_" + txtProtocollo.Text + ".pdf";
@@ -175,8 +181,7 @@ namespace WinMef730
                 }
                 File.WriteAllBytes(filename, datiOut.esitiPositivi.dettagliEsito.pdf);
                 this.dataGridView1.Rows.Add("Successo", "000", "File salvato in "+filename);
-            } else
-            {
+            } else {
                 foreach (ServiceReference1.dettaglioEsitoNegativo negativo in datiOut.esitiNegativi)
                 {
                     this.dataGridView1.Rows.Add("Errore", negativo.codice, negativo.descrizione);
@@ -184,6 +189,5 @@ namespace WinMef730
             }
             return;
         }
-
     }
 }

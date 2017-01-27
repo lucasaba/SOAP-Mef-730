@@ -57,10 +57,6 @@
             this.Tipo = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Codice = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Descrizione = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.label10 = new System.Windows.Forms.Label();
-            this.dtPickerDataFine = new System.Windows.Forms.DateTimePicker();
-            this.label9 = new System.Windows.Forms.Label();
-            this.dtPickerDataInizio = new System.Windows.Forms.DateTimePicker();
             this.txtProtocollo = new System.Windows.Forms.TextBox();
             this.label8 = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
@@ -268,10 +264,6 @@
             this.tabPage2.Controls.Add(this.btnRichiediRicevuta);
             this.tabPage2.Controls.Add(this.btnRicevutaTest);
             this.tabPage2.Controls.Add(this.dataGridView1);
-            this.tabPage2.Controls.Add(this.label10);
-            this.tabPage2.Controls.Add(this.dtPickerDataFine);
-            this.tabPage2.Controls.Add(this.label9);
-            this.tabPage2.Controls.Add(this.dtPickerDataInizio);
             this.tabPage2.Controls.Add(this.txtProtocollo);
             this.tabPage2.Controls.Add(this.label8);
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
@@ -290,6 +282,7 @@
             this.btnRichiediRicevuta.TabIndex = 14;
             this.btnRichiediRicevuta.Text = "Richiedi ricevuta";
             this.btnRichiediRicevuta.UseVisualStyleBackColor = true;
+            this.btnRichiediRicevuta.Click += new System.EventHandler(this.btnRichiediRicevuta_Click);
             // 
             // btnRicevutaTest
             // 
@@ -332,38 +325,6 @@
             this.Descrizione.HeaderText = "Descrizione";
             this.Descrizione.Name = "Descrizione";
             this.Descrizione.ReadOnly = true;
-            // 
-            // label10
-            // 
-            this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(477, 13);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(50, 13);
-            this.label10.TabIndex = 11;
-            this.label10.Text = "Data fine";
-            // 
-            // dtPickerDataFine
-            // 
-            this.dtPickerDataFine.Location = new System.Drawing.Point(533, 7);
-            this.dtPickerDataFine.Name = "dtPickerDataFine";
-            this.dtPickerDataFine.Size = new System.Drawing.Size(200, 20);
-            this.dtPickerDataFine.TabIndex = 10;
-            // 
-            // label9
-            // 
-            this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(209, 13);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(56, 13);
-            this.label9.TabIndex = 9;
-            this.label9.Text = "Data inizio";
-            // 
-            // dtPickerDataInizio
-            // 
-            this.dtPickerDataInizio.Location = new System.Drawing.Point(271, 7);
-            this.dtPickerDataInizio.Name = "dtPickerDataInizio";
-            this.dtPickerDataInizio.Size = new System.Drawing.Size(200, 20);
-            this.dtPickerDataInizio.TabIndex = 8;
             // 
             // txtProtocollo
             // 
@@ -443,10 +404,6 @@
         private System.Windows.Forms.Button btnRichiediRicevuta;
         private System.Windows.Forms.Button btnRicevutaTest;
         private System.Windows.Forms.DataGridView dataGridView1;
-        private System.Windows.Forms.Label label10;
-        private System.Windows.Forms.DateTimePicker dtPickerDataFine;
-        private System.Windows.Forms.Label label9;
-        private System.Windows.Forms.DateTimePicker dtPickerDataInizio;
         private System.Windows.Forms.TextBox txtProtocollo;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.DataGridViewTextBoxColumn Tipo;
