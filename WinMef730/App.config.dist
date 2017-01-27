@@ -6,15 +6,22 @@
     <system.serviceModel>
         <bindings>
             <basicHttpBinding>
-              <binding name="InvioTelematicoSS730pMtomPortBinding" messageEncoding="Mtom">
-                <security mode="Transport"/>
-              </binding>
+                <binding name="InvioTelematicoSS730pMtomPortBinding" messageEncoding="Mtom">
+                    <security mode="Transport" />
+                </binding>
+                <binding name="RicevutaPdf730PortBinding">
+                    <security mode="Transport" />
+                </binding>
+                <binding name="RicevutaPdf730PortBinding1" />
             </basicHttpBinding>
         </bindings>
         <client>
             <endpoint address="http://localhost:9080/InvioTelematicoSS730pMtomWeb/InvioTelematicoSS730pMtomPort"
                 binding="basicHttpBinding" bindingConfiguration="InvioTelematicoSS730pMtomPortBinding"
                 contract="InvioFlussi730.InvioTelematicoSS730pMtom" name="InvioTelematicoSS730pMtomPort" />
+            <endpoint address="https://invioSS730pTest.sanita.finanze.it/Ricevute730ServiceWeb/ricevutePdf"
+                binding="basicHttpBinding" bindingConfiguration="RicevutaPdf730PortBinding"
+                contract="ServiceReference1.RicevutaPdf730" name="RicevutaPdf730Port" />
         </client>
     </system.serviceModel>
   <appSettings>

@@ -18,22 +18,28 @@ namespace WinMef730
 {
     public partial class Form1 : Form
     {
-        private string endpoint_coinfiguration_name = "InvioTelematicoSS730pMtomPort";
-        private string test_remote_address = "https://invioSS730pTest.sanita.finanze.it/InvioTelematicoSS730pMtomWeb/InvioTelematicoSS730pMtomPort";
-        private string remote_address = "https://invioSS730p.sanita.finanze.it/InvioTelematicoSS730pMtomWeb/InvioTelematicoSS730pMtomPort";
+        private string endpoint_configuration_name = "InvioTelematicoSS730pMtomPort";
+        private string test_invio_telematico_remote_address = "https://invioSS730pTest.sanita.finanze.it/InvioTelematicoSS730pMtomWeb/InvioTelematicoSS730pMtomPort";
+        private string invio_telematico_remote_address = "https://invioSS730p.sanita.finanze.it/InvioTelematicoSS730pMtomWeb/InvioTelematicoSS730pMtomPort";
 
-        private InvioFlussi730.InvioTelematicoSS730pMtomClient client;
+        private string endpoint_ricevuta_pdf_name = "RicevutaPdf730Port";
+        private string test_ricevute_pdf = "https://invioSS730pTest.sanita.finanze.it/Ricevute730ServiceWeb/ricevutePdf";
+        private string ricevute_pdf = "https://invioSS730p.sanita.finanze.it/Ricevute730ServiceWeb/ricevutePdf";
+
+        private InvioFlussi730.InvioTelematicoSS730pMtomClient clientInvio;
+        private ServiceReference1.RicevutaPdf730Client clientRicevuta;
 
         public Form1()
         {
             InitializeComponent();
+            /*
             txtUsername.Text = ConfigurationManager.AppSettings["username"];
             txtPassword.Text = ConfigurationManager.AppSettings["password"];
             txtPin.Text = ConfigurationManager.AppSettings["pin"];
             txtCfProprietario.Text = ConfigurationManager.AppSettings["cf_proprietario"];
             txtRegione.Text = ConfigurationManager.AppSettings["codice_regione"];
             txtASL.Text = ConfigurationManager.AppSettings["codice_asl"];
-            txtSSA.Text = ConfigurationManager.AppSettings["codice_ssa"];
+            txtSSA.Text = ConfigurationManager.AppSettings["codice_ssa"];*/
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -46,13 +52,13 @@ namespace WinMef730
 
         private void btnTestSend_Click(object sender, EventArgs e)
         {
-            this.client = new InvioFlussi730.InvioTelematicoSS730pMtomClient(this.endpoint_coinfiguration_name, this.test_remote_address);
+            this.clientInvio = new InvioFlussi730.InvioTelematicoSS730pMtomClient(this.endpoint_configuration_name, this.test_invio_telematico_remote_address);
             this.sendRequest();
         }
 
         private void btnInvio_Click(object sender, EventArgs e)
         {
-            this.client = new InvioFlussi730.InvioTelematicoSS730pMtomClient(this.endpoint_coinfiguration_name, this.remote_address);
+            this.clientInvio = new InvioFlussi730.InvioTelematicoSS730pMtomClient(this.endpoint_configuration_name, this.invio_telematico_remote_address);
             this.sendRequest();
         }
 
@@ -83,12 +89,12 @@ namespace WinMef730
                     return (true);
                 };
 
-            this.client.Endpoint.EndpointBehaviors.Add(new BasicAuthenticationBehavior(txtUsername.Text, txtPassword.Text));
+            this.clientInvio.Endpoint.EndpointBehaviors.Add(new BasicAuthenticationBehavior(txtUsername.Text, txtPassword.Text));
 
             InvioFlussi730.ricevutaInvio ricevuta = null;
             try
             {
-                ricevuta = this.client.inviaFileMtom(
+                ricevuta = this.clientInvio.inviaFileMtom(
                     req.nomeFileAllegato, 
                     req.pincodeInvianteCifrato, 
                     req.datiProprietario, 
@@ -118,5 +124,66 @@ namespace WinMef730
 
             return Convert.ToBase64String(bytout);
         }
+
+        /**
+         * Gestione delle ricevute
+         */
+        private void btnRicevutaTest_Click(object sender, EventArgs e)
+        {
+            this.clientRicevuta = new ServiceReference1.RicevutaPdf730Client(this.endpoint_ricevuta_pdf_name, this.test_ricevute_pdf);
+            this.sendRicevutaRequest();
+        }
+
+        private void sendRicevutaRequest()
+        {
+            ServiceReference1.RicevutaPdfRequest req = new ServiceReference1.RicevutaPdfRequest();
+            ServiceReference1.RicevutaPdfResponse resp = new ServiceReference1.RicevutaPdfResponse();
+
+            req.DatiInputRichiesta = new ServiceReference1.datiInput();
+            req.DatiInputRichiesta.pinCode = this.encode(txtPin.Text);
+            req.DatiInputRichiesta.protocollo = txtProtocollo.Text;
+
+            System.Net.ServicePointManager.ServerCertificateValidationCallback = delegate (
+                Object obj, X509Certificate certificate, X509Chain chain, SslPolicyErrors errors)
+            {
+                return (true);
+            };
+
+            this.clientRicevuta.Endpoint.EndpointBehaviors.Add(new BasicAuthenticationBehavior(txtUsername.Text, txtPassword.Text));
+
+            ServiceReference1.datiInput datiIn = new ServiceReference1.datiInput();
+            datiIn.pinCode = this.encode(txtPin.Text);
+            datiIn.protocollo = txtProtocollo.Text;
+
+            ServiceReference1.datiOutput datiOut = this.clientRicevuta.RicevutaPdf(datiIn);
+
+            if(datiOut.esitiPositivi != null)
+            {
+                string path = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+                string file = "Ricevuta_" + txtProtocollo.Text + ".pdf";
+                string filename = path + '\\' + file;
+                if(File.Exists(filename))
+                {
+                    DialogResult dr = MessageBox.Show(
+                        "Il file " + filename + " esiste. Vuoi sovrascriverlo ?", 
+                        "Attenzione", 
+                        MessageBoxButtons.YesNo);
+                    if(dr == DialogResult.No)
+                    {
+                        return;
+                    }
+                }
+                File.WriteAllBytes(filename, datiOut.esitiPositivi.dettagliEsito.pdf);
+                this.dataGridView1.Rows.Add("Successo", "000", "File salvato in "+filename);
+            } else
+            {
+                foreach (ServiceReference1.dettaglioEsitoNegativo negativo in datiOut.esitiNegativi)
+                {
+                    this.dataGridView1.Rows.Add("Errore", negativo.codice, negativo.descrizione);
+                }
+            }
+            return;
+        }
+
     }
 }
